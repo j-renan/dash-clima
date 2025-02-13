@@ -1,0 +1,48 @@
+networks:
+    api:
+        external: true
+        name: apagri_monitora
+
+services:
+    npm:
+        image: dashclima:latest
+        tty: true
+        environment:
+            NODE_ENV: development
+        volumes:
+            - ./:/var/www/front
+        working_dir: /var/www/front
+        entrypoint: [ 'npm' ]
+        networks:
+            - api
+
+    dashfront:
+        image: dashclima:latest
+        build:
+            context: .
+            dockerfile: .environment/docker/Dockerfile
+        container_name: dashfront
+        ports:
+            - "4222:4222"
+        tty: true
+        environment:
+            NODE_ENV: development
+        volumes:
+            - ./:/var/www/front
+        working_dir: /var/www/front
+        # '--max_old_space_size=8192', # foi corrigido o erro de memória com pacote, mas caso ocorra novamente, descomentar essa linha e voltar command
+        command: ['node', 'node_modules/@angular/cli/bin/ng', 'serve', '--port', '4222', '--host', '0.0.0.0']
+        networks:
+            - api
+
+    ng:
+        image: dashclima:latest
+        tty: true
+        environment:
+            NODE_ENV: development
+        volumes:
+            - ./:/var/www/front
+        working_dir: /var/www/front
+        entrypoint: ['ng']
+        networks:
+            - api
