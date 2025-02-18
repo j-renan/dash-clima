@@ -22,7 +22,6 @@ export class HomeComponent implements OnInit {
     private nsService = inject(NotificationService)
 
     ngOnInit(): void {
-        //this.getClimaByCity('london')
     }
 
     getClimaByCity(city: string) {
@@ -30,12 +29,6 @@ export class HomeComponent implements OnInit {
         this.climaService.getDadosClima(city)
             .pipe(
                 map((response: any) => {
-/*                     if (!response) {
-                        this.nsService.error('Erro ao buscar dados do local informado!')
-                        return
-                    } */
-                    console.log('Response:', response)
-
                     return {
                         cidade: response.cidade,
                         data: response.data,
@@ -56,10 +49,8 @@ export class HomeComponent implements OnInit {
                 },
                 error: (error) => {
                     this.nsService.error('Erro ao buscar dados do local informado!')
-                    console.error('Error:', error)
                 }
-            }
-            )
+            })
     }
 
     private formatarPrevisao(dados: Previsao[]): Previsao[] {
